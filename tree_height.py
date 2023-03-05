@@ -1,63 +1,62 @@
 # 221RDC047, Jēkabs Kindzulis, 18.gr.
 
-import numpy as np
+import sys
 import threading
 
-
 class Node:
-    def __init__(self):
+
+    def _init_(self):
         self.children = []
 
+def calculateHeight(num, parents):
 
-def compute_height(num, parents):
-    nodes = [Node() for _ in range(num)]
-    root_index = 0
+    node = [Node() for _ in range(num)]
+    rootPlace = 0
 
-    for child_index in range(num):
-        parent_index = parents[child_index]
+    for childPlace in range(num):
+        parentPlace = parents[childPlace]
 
-        if parent_index != -1:
-            nodes[parent_index].children.append(nodes[child_index])
+        if parentPlace != -1:
+            node[parentPlace].children.append(node[childPlace])
         else:
-            root_index = child_index
+            rootPlace = childPlace
 
-    heights = np.zeros(num, dtype=np.int64)
+    return heightVal(node[rootPlace])
 
-    def get_height(node):
-        if not node.children:
-            return 1
-        elif heights[node.children[0]] != 0:
-            return 1 + heights[node.children[0]]
-        else:
-            height = 1 + max([get_height(child) for child in node.children])
-            heights[node.children[0]] = height - 1
-            return height
 
-    return get_height(nodes[root_index])
+def heightVal(node):
+
+    if not node.children:
+        return 1
+    else:
+        return 1 + max([heightVal(child) for child in node.children])
 
 
 def main():
-    input_str = input()
 
-    if "a" in input_str:
+    imput = input()
+
+    if "a" in imput:
         print()
         return
 
-    if "I" in input_str:
+    if "I" in imput:
         num = int(input())
         parents = list(map(int, input().split()))
-        print(compute_height(num, parents))
+        print(calculateHeight(num, parents))
 
-    if "F" in input_str:
-        filename = input()
-        if "a" in filename:
+    if "F" in imput:
+
+        file = input()
+        if "a" in file:
             return
-        path = "test/" + filename
+        path = "test/" + file
+
         with open(path, 'r') as file:
+
             num = int(file.readline().strip())
             parents = list(map(int, file.readline().strip().split()))
-            print(compute_height(num, parents))
-
+            print(calculateHeight(num, parents))
 
 sys.setrecursionlimit(10**7)  # max depth of recursion
 threading.stack_size(2**27)   # new thread will get stack of such size
