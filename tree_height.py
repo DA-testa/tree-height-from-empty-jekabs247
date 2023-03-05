@@ -22,7 +22,6 @@ def compute_height(n, parents):
             height += 1
             current = parents[current]
 
-        
         heights[i] = height
 
     return max(heights)
@@ -30,17 +29,19 @@ def compute_height(n, parents):
 def main():
 
     choice = input()
-    n = int(input())
-
-    parents = list(map(int, input().split()))
-
+    
     if choice == "I":
-        print(compute_height(n, parents))
+        n = int(input())
+        parents = list(map(int, input().split()))
     else:
-        print(compute_height(n, parents))
+        file_name = input()
+        with open(file_name, 'r') as f:
+            n = int(f.readline())
+            parents = list(map(int, f.readline().split()))
 
-    #print(compute_height(n, parents))
+    print(compute_height(n, parents))
 
+# Set the recursion depth limit and stack size for the new thread
 sys.setrecursionlimit(10**7)  
 threading.stack_size(2**27)   
 threading.Thread(target=main).start()
