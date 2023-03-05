@@ -4,28 +4,43 @@ import sys
 import threading
 import numpy
 
-def find_root(n, children):
+def find_root(n, parents):
     
+    root = -1
     for i in range(n):
-        if i not in children:
-            return i
+        if parents[i] == -1:
+            root = i
+            break
+    return root
 
-def compute_height(node, children, heights):
+def compute_height(n, parents):
     
-    if node in heights:
-        return heights[node]
-    
+    root = find_root(n, parents)
+
+    heights = numpy.zeros(n, dtype=numpy.int64)
+
     max_height = 0
-    if node in children:
-        for child in children[node]:
-            height = compute_height(child, children, heights)
-            max_height = max(max_height, height)
-    
-    height = max_height + 1
-    heights[node] = height
-    return height
+
+    for i in range(n):
+
+        if heights[i] != 0:
+            continue
+        height = 0
+        node = i
+
+        while node != -1:
+            if heights[node] != 0:
+                height += heights[node]
+                break
+            height += 1
+            node = parents[node]
+        heights[i] = height
+        max_height = max(max_height, height)
+
+    return max_height
 
 def main():
+
     input_method = input()
 
     if input_method.lower() == 'i':
@@ -35,31 +50,9 @@ def main():
         n = int(input())
         parents = list(map(int, input().split()))
 
-    # Build a dictionary of children for each node
-    children = {}
-    for i in range(n):
-        if parents[i] == -1:
-            continue
-        if parents[i] not in children:
-            children[parents[i]] = []
-        children[parents[i]].append(i)
-
-    # Find the root node
-    root = find_root(n, children)
-
-    # Create an array to store the heights of each node
-    heights = {}
-
-    # Calculate the height of each node
-    max_height = 0
-    if root in children:
-        for child in children[root]:
-            height = compute_height(child, children, heights)
-            max_height = max(max_height, height)
-
-    print(max_height)
-
-if __name__ == '__main__':
     sys.setrecursionlimit(10**7)
     threading.stack_size(2**27)
-    threading.Thread(target=main).start()
+    threading.Thread(target=print, args=(compute_height(n, parents),)).start()
+
+if __name__ == '__main__':
+    main()
