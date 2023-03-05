@@ -48,8 +48,8 @@ def main():
         n = int(input("Enter the number of nodes: "))
         parents = list(map(int, input("Enter the parent of each node: ").split()))
         
-    sys.setrecursionlimit(10**7)
-    threading.stack_size(2**27)
+    sys.setrecursionlimit(10**9)
+    threading.stack_size(2**32)
     threading.Thread(target=print, args=(compute_height(n, parents),)).start()
 
 if __name__ == '__main__':
