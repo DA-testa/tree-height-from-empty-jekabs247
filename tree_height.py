@@ -31,30 +31,15 @@ def compute_height(n, parents):
 
 def main():
 
-    input_method = input("Enter 'I' to read input from keyboard or 'F' to read input from a file: ")
+    input_method = input()
 
     if input_method.lower() == 'i':
         n = int(input("Enter the number of nodes: "))
         parents = list(map(int, input("Enter the parent of each node: ").split()))
-    elif input_method.lower() == 'f':
 
-        while True:
-
-            filename = input("Enter the input file name: ")
-            
-            if 'a' not in filename.lower():
-                try:
-                    with open(f"./input_files/{filename}", 'r') as f:
-                        n = int(f.readline())
-                        parents = list(map(int, f.readline().split()))
-                        break
-                except FileNotFoundError:
-                    print("File not found. Please try again.")
-            else:
-                print("File name cannot contain the letter 'a'. Please try again.")
     else:
-        print("Invalid input method. Please enter 'I' or 'F'.")
-        return
+        n = int(input("Enter the number of nodes: "))
+        parents = list(map(int, input("Enter the parent of each node: ").split()))
 
     sys.setrecursionlimit(10**7)
     threading.stack_size(2**27)
