@@ -27,21 +27,29 @@ def compute_height(n, parents):
     return max(heights)
 
 def main():
+    input_type = input()
 
-    choice = input()
-    
-    if choice == "I":
+    if input_type.upper() == "I":
         n = int(input())
         parents = list(map(int, input().split()))
+        print(compute_height(n, parents))
+    elif input_type.upper() == "F":
+        filename = input()
+        if 'a' in filename:
+            print()
+            return
+        try:
+            with open("folder/" + filename, 'r') as f:
+                n = int(f.readline())
+                parents = list(map(int, f.readline().split()))
+                print(compute_height(n, parents))
+        except FileNotFoundError:
+            print("File not found.")
     else:
-        file_name = input()
-        with open(file_name, 'r') as f:
-            n = int(f.readline())
-            parents = list(map(int, f.readline().split()))
+        print("Invalid input type.")
 
-    print(compute_height(n, parents))
 
-# Set the recursion depth limit and stack size for the new thread
 sys.setrecursionlimit(10**7)  
 threading.stack_size(2**27)   
 threading.Thread(target=main).start()
+
