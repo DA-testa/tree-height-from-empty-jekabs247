@@ -22,10 +22,12 @@ def tree_height(num_nodes, parents):
             root = child
 
     def height(node):
+
         if not node.children:
             return 1
         else:
-            return 1 + max([height(child) for child in node.children])
+            temp = max([height(child) for child in node.children])
+            return 1 + temp
         
     return height(nodes[root])
 
