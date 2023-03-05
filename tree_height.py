@@ -1,58 +1,64 @@
 # 221RDC047, Jēkabs Kindzulis, 18.gr.
 
-import sys
+import numpy as np
 import threading
-import numpy
 
-def find_root(n, parents):
-    
-    root = -1
-    for i in range(n):
-        if parents[i] == -1:
-            root = i
-            break
-    return root
 
-def compute_height(n, parents):
-    
-    root = find_root(n, parents)
+class Node:
+    def __init__(self):
+        self.children = []
 
-    heights = numpy.zeros(n, dtype=numpy.int64)
 
-    max_height = 0
+def compute_height(num, parents):
+    nodes = [Node() for _ in range(num)]
+    root_index = 0
 
-    for i in range(n):
+    for child_index in range(num):
+        parent_index = parents[child_index]
 
-        if heights[i] != 0:
-            continue
-        height = 0
-        node = i
+        if parent_index != -1:
+            nodes[parent_index].children.append(nodes[child_index])
+        else:
+            root_index = child_index
 
-        while node != -1:
-            if heights[node] != 0:
-                height += heights[node]
-                break
-            height += 1
-            node = parents[node]
-        heights[i] = height
-        max_height = max(max_height, height)
+    heights = np.zeros(num, dtype=np.int64)
 
-    return max_height
+    def get_height(node):
+        if not node.children:
+            return 1
+        elif heights[node.children[0]] != 0:
+            return 1 + heights[node.children[0]]
+        else:
+            height = 1 + max([get_height(child) for child in node.children])
+            heights[node.children[0]] = height - 1
+            return height
+
+    return get_height(nodes[root_index])
+
 
 def main():
+    input_str = input()
 
-    input_method = input()
+    if "a" in input_str:
+        print()
+        return
 
-    if input_method.lower() == 'i':
-        n = int(input())
+    if "I" in input_str:
+        num = int(input())
         parents = list(map(int, input().split()))
-    else:
-        n = int(input())
-        parents = list(map(int, input().split()))
+        print(compute_height(num, parents))
 
-    sys.setrecursionlimit(10**7)
-    threading.stack_size(2**27)
-    threading.Thread(target=print, args=(compute_height(n, parents),)).start()
+    if "F" in input_str:
+        filename = input()
+        if "a" in filename:
+            return
+        path = "test/" + filename
+        with open(path, 'r') as file:
+            num = int(file.readline().strip())
+            parents = list(map(int, file.readline().strip().split()))
+            print(compute_height(num, parents))
 
-if __name__ == '__main__':
-    main()
+
+sys.setrecursionlimit(10**7)  # max depth of recursion
+threading.stack_size(2**27)   # new thread will get stack of such size
+threading.Thread(target=main).start()
