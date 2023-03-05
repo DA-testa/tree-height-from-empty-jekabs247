@@ -4,46 +4,50 @@ import sys
 import threading
 
 class Node:
+
     def __init__(self):
         self.children = []
 
 def tree_height(num_nodes, parents):
 
-    heights = {}
+    nodes = [Node() for _ in range(num_nodes)]
+    root = 0
 
-    for node_index in range(num_nodes):
-        height = 0
-        parent_index = parents[node_index]
-        while parent_index != -1:
-            if parent_index in heights:
-                height += heights[parent_index]
-                break
-            else:
-                height += 1
-                parent_index = parents[parent_index]
-        heights[node_index] = height
+    for child in range(num_nodes):
+        parent = parents[child]
 
-    return max(heights.values())
+        if parent != -1:
+            nodes[parent].children.append(nodes[child])
+        else:
+            root = child
+
+    def height(node):
+        if not node.children:
+            return 1
+        else:
+            return 1 + max([height(child) for child in node.children])
+        
+    return height(nodes[root])
 
 def main():
 
-    input_str = input()
+    str = input()
 
-    if "I" in input_str:
+    if "I" in str:
         num_nodes = int(input())
         parents = list(map(int, input().split()))
         print(tree_height(num_nodes, parents))
 
-    if "a" in input_str:
+    if "a" in str:
         print()
         return
 
-    if "F" in input_str:
-        filename = input()
-        if "a" in filename:
+    if "F" in str:
+        fname = input()
+        if "a" in fname:
             return
         
-        p = "test/" + filename
+        p = "test/" + fname
 
         with open(p, 'r') as file:
             num_nodes = int(file.readline().strip())
