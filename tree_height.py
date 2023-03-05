@@ -38,21 +38,9 @@ def main():
         parents = list(map(int, input("Enter the parent of each node: ").split()))
 
     else:
-        #n = int(input("Enter the number of nodes: "))
-        #parents = list(map(int, input("Enter the parent of each node: ").split()))
-        while True:
-            filename = input("Enter the input file name: ")
-            if 'a' not in filename.lower():
-                try:
-                    with open(f"./input_files/{filename}", 'r') as f:
-                        n = int(f.readline())
-                        parents = list(map(int, f.readline().split()))
-                        break
-                except FileNotFoundError:
-                    print("File not found. Please try again.")
-            else:
-                print("File name cannot contain the letter 'a'. Please try again.")
-
+        n = int(input("Enter the number of nodes: "))
+        parents = list(map(int, input("Enter the parent of each node: ").split()))
+        
     sys.setrecursionlimit(10**7)
     threading.stack_size(2**27)
     threading.Thread(target=print, args=(compute_height(n, parents),)).start()
