@@ -4,40 +4,35 @@ import sys
 import threading
 
 class Node:
-
     def __init__(self):
         self.children = []
 
-def compute_height(num, parents):
+def tree_height(num_nodes, parents):
 
-    nodes = [Node() for _ in range(num)]
-    root_index = 0
+    heights = {}
 
-    # Assign children to parents
-    for child_index in range(num):
-        parent_index = parents[child_index]
+    for node_index in range(num_nodes):
+        height = 0
+        parent_index = parents[node_index]
+        while parent_index != -1:
+            if parent_index in heights:
+                height += heights[parent_index]
+                break
+            else:
+                height += 1
+                parent_index = parents[parent_index]
+        heights[node_index] = height
 
-        if parent_index != -1:
-            nodes[parent_index].children.append(nodes[child_index])
-        else:
-            root_index = child_index
-
-    def get_height(node):
-        if not node.children:
-            return 1
-        else:
-            return 1 + max([get_height(child) for child in node.children])
-        
-    return get_height(nodes[root_index])
+    return max(heights.values())
 
 def main():
 
     input_str = input()
 
     if "I" in input_str:
-        num = int(input())
+        num_nodes = int(input())
         parents = list(map(int, input().split()))
-        print(compute_height(num, parents))
+        print(tree_height(num_nodes, parents))
 
     if "a" in input_str:
         print()
@@ -48,14 +43,15 @@ def main():
         if "a" in filename:
             return
         
-        path = "test/" + filename
+        p = "test/" + filename
 
-        with open(path, 'r') as file:
-            num = int(file.readline().strip())
+        with open(p, 'r') as file:
+            num_nodes = int(file.readline().strip())
             parents = list(map(int, file.readline().strip().split()))
-            print(compute_height(num, parents))
+            print(tree_height(num_nodes, parents))
 
 if __name__ == "__main__":
+    
     sys.setrecursionlimit(10**7)  
     threading.stack_size(2**27) 
     threading.Thread(target=main).start()
