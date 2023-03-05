@@ -28,12 +28,18 @@ def compute_height(n, parents):
     return max(heights)
 
 def main():
-    
+
+    choice = input()
     n = int(input())
 
     parents = list(map(int, input().split()))
 
-    print(compute_height(n, parents))
+    if choice == "I":
+        print(compute_height(n, parents))
+    else:
+        print(compute_height(n, parents))
+
+    #print(compute_height(n, parents))
 
 sys.setrecursionlimit(10**7)  
 threading.stack_size(2**27)   
